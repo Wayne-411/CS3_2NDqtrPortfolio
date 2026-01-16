@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hello!!! I am Wayne</title>
+
+<style>
+  body { font-family: Arial, sans-serif; }
+
+  form {
+    width: 1000px;
+    margin: auto;
+    padding: 20px;
+    border: 2px solid #000000;
+    background:#eff3fa
+  }
+
+  fieldset {
+    margin-bottom: 90px;
+    padding: 15px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 6px;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border: 2px solid rgb(0, 0, 0);
+    background-color: #eef;
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  .error {
+    border: 2px solid rgb(0, 0, 0);
+    background-color: rgb(255, 1, 1);
+  }
+
+  button { margin-right: 8px; } 
+
+  .radio-group {
+    display: flex;
+    gap: 20px;
+    margin-top: 5px;
+  }
+
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+</style>
+</head>
+
+<body onload="loadData()">
+
+<form method="post" onsubmit="return submitForm(event);" onreset="return confirm('Do you want to reset the form?');">
+
+  <fieldset>
+    <legend>Personal Information</legend>
+
+    <label>
+      Student ID
+      <input type="number" id="studentId" required onblur="checkEmpty(this)">
+    </label>
+
+    <label>
+      Full Name
+      <input type="text" id="name" required onblur="checkEmpty(this)">
+    </label>
+
+    <label>
+      Birthday
+      <input type="date" id="birthday" required>
+    </label>
+
+    <label>
+      Email Address
+      <input type="email" id="email" required onblur="checkEmpty(this)">
+    </label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Other Information</legend>
+
+    <label>
+      Mobile Phone
+      <input type="text" id="phone" required onblur="checkEmpty(this)">
+    </label>
+
+    <label>
+      Grade Level
+      <select id="grade" required>
+        <option value="">Select</option>
+        <option value="g7">Grade 7</option>
+        <option value="g8">Grade 8</option>
+        <option value="g9">Grade 9</option>
+        <option value="g10">Grade 10</option>
+        <option value="g10">Grade 11</option>
+        <option value="g10">Grade 12</option>
+      </select>
+    </label>
+
+    <label>
+      Intern / Extern
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="role" value="intern" required>
+          Intern
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="role" value="extern">
+          Extern
+        </label>
+      </div>
+    </label>
+
+    <label>
+      Preferred Organization / Club
+      <select id="club" required>
+        <option value="">Select</option>
+        <option value="it">Himig Agham</option>
+        <option value="sci">Sir Roy Club</option>
+        <option value="art">Basketball Club</option>
+        <option value="math">Joram Club</option>
+        <option value="music">Running Club</option>
+      </select>
+    </label>
+
+    <label>
+      Why do you want to join
+      <textarea id="reason" required onblur="checkEmpty(this)"></textarea>
+    </label>
+  </fieldset>
+
+  <button type="submit">Submit</button>
+  <button type="reset">Reset</button>
+  <button type="button" onclick="saveData()">Save</button>
+  <button type="button" onclick="clearData()">Clear</button>
+
+</form>
+
+<script>
+function checkEmpty(el) {
+  if (!el.value.trim()) el.classList.add("error");
+  else el.classList.remove("error");
+}
+
+
+function submitForm(event) {
+  event.preventDefault(); 
+  if (!confirm("Do you want to submit this application?")) return false;
+  saveData();
+  alert("Thank you for submitting your application!");
+  return false;
+}
+
+
+function saveData() {
+  localStorage.setItem("studentId", studentId.value);
+  localStorage.setItem("name", name.value);
+  localStorage.setItem("birthday", birthday.value);
+  localStorage.setItem("email", email.value);
+  localStorage.setItem("phone", phone.value);
+  localStorage.setItem("grade", grade.value);
+  localStorage.setItem("club", club.value);
+  localStorage.setItem("reason", reason.value);
+
+  const role = document.querySelector('input[name="role"]:checked');
+  if (role) localStorage.setItem("role", role.value);
+}
+
+
+function loadData() {
+  studentId.value = localStorage.getItem("studentId") || "";
+  name.value = localStorage.getItem("name") || "";
+  birthday.value = localStorage.getItem("birthday") || "";
+  email.value = localStorage.getItem("email") || "";
+  phone.value = localStorage.getItem("phone") || "";
+  grade.value = localStorage.getItem("grade") || "";
+  club.value = localStorage.getItem("club") || "";
+  reason.value = localStorage.getItem("reason") || "";
+
+  const role = localStorage.getItem("role");
+  if (role) {
+    document.querySelector(`input[name="role"][value="${role}"]`).checked = true;
+  }
+}
+
+
+function clearData() {
+  localStorage.clear();
+  document.querySelectorAll("input, select, textarea").forEach(el => {
+    el.value = "";
+    if (el.type === "radio") el.checked = false;
+  });
+}
+</script>
+
+</body>
+</html>
