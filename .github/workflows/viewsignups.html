@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>View Signups</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: rgb(146, 224, 255);
+            color: rgb(0, 0, 0);
+        }
+
+        select {
+            padding: 6px;
+        }
+    </style>
+</head>
+
+<body onload="loadData()">
+
+    <h1>Show List of Students Who Signed-Up</h1>
+    <a href="signup.html">Back to Signup</a>
+
+    <p>
+        Select Your Club
+        <select id="filter" onchange="filterData()">
+            <option value="ALL">ALL</option>
+        </select>
+    </p>
+
+    <p id="total"></p>
+
+    <table id="table">
+        <thead>
+            <tr>
+                <th>Club</th>
+                <th>ID</th>
+                <th>Fullname</th>
+                <th>Grade</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Intern|Extern</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        let allData = []
+
+        function loadData() {
+            allData = JSON.parse(localStorage.getItem("signups")) || []
+            let clubs = [...new Set(allData.map(d => d.club))]
+            clubs.forEach(c => {
+                let o = document.createElement("option")
+                o.value = c
+                o.textContent = c
+                filter.appendChild(o)
+            })
+            render(allData)
+        }
+
+        function filterData() {
+            let val = filter.value
+            if (val === "ALL") render(allData)
+            else render(allData.filter(d => d.club === val))
+        }
+
+        function render(data) {
+            let body = document.querySelector("tbody")
+            body.innerHTML = ""
+            if (data.length === 0) {
+                body.innerHTML = "<tr><td colspan='7'>No Sign Ups for the club</td></tr>"
+                total.textContent = "Total Signup : 0"
+                return
+            }
+            data.forEach(d => {
+                body.innerHTML += `
+<tr>
+<td>${d.club}</td>
+<td>${d.id}</td>
+<td>${d.name}</td>
+<td>${d.grade}</td>
+<td>${d.email}</td>
+<td>${d.mobile}</td>
+<td>${d.role}</td>
+</tr>`
+            })
+            total.textContent = "Total Signup : " + data.length
+        }
+
+
+    </script>
+
+</body>
+
+</html>
